@@ -39,7 +39,7 @@ HealthCheckerImplBase::HealthCheckerImplBase(const Cluster& cluster,
           PROTOBUF_GET_MS_OR_DEFAULT(config, healthy_edge_interval, interval_.count())),
       transport_socket_options_(initTransportSocketOptions(config)),
       transport_socket_match_metadata_(initTransportSocketMatchMetadata(config)) {
-  cluster_.prioritySet().addMemberUpdateCb(
+  member_update_cb_ = cluster_.prioritySet().addMemberUpdateCb(
       [this](const HostVector& hosts_added, const HostVector& hosts_removed) -> void {
         onClusterMemberUpdate(hosts_added, hosts_removed);
       });

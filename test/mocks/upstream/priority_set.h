@@ -17,8 +17,8 @@ public:
   void runUpdateCallbacks(uint32_t priority, const HostVector& hosts_added,
                           const HostVector& hosts_removed);
 
-  MOCK_METHOD(Common::CallbackHandle*, addMemberUpdateCb, (MemberUpdateCb callback), (const));
-  MOCK_METHOD(Common::CallbackHandle*, addPriorityUpdateCb, (PriorityUpdateCb callback), (const));
+  MOCK_METHOD(Common::CallbackHandlePtr, addMemberUpdateCb, (MemberUpdateCb callback), (const));
+  MOCK_METHOD(Common::CallbackHandlePtr, addPriorityUpdateCb, (PriorityUpdateCb callback), (const));
   MOCK_METHOD(const std::vector<HostSetPtr>&, hostSetsPerPriority, (), (const));
   MOCK_METHOD(std::vector<HostSetPtr>&, hostSetsPerPriority, ());
   MOCK_METHOD(void, updateHosts,

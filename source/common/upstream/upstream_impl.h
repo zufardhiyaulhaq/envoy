@@ -296,9 +296,10 @@ public:
   /**
    * Install a callback that will be invoked when the host set membership changes.
    * @param callback supplies the callback to invoke.
-   * @return Common::CallbackHandle* the callback handle.
+   * @return Common::CallbackHandlePtr the callback handle.
    */
-  Common::CallbackHandle* addPriorityUpdateCb(PrioritySet::PriorityUpdateCb callback) const {
+  ABSL_MUST_USE_RESULT Common::CallbackHandlePtr
+  addPriorityUpdateCb(PrioritySet::PriorityUpdateCb callback) const {
     return member_update_cb_helper_.add(callback);
   }
 
@@ -433,10 +434,10 @@ class PrioritySetImpl : public PrioritySet {
 public:
   PrioritySetImpl() : batch_update_(false) {}
   // From PrioritySet
-  Common::CallbackHandle* addMemberUpdateCb(MemberUpdateCb callback) const override {
+  Common::CallbackHandlePtr addMemberUpdateCb(MemberUpdateCb callback) const override {
     return member_update_cb_helper_.add(callback);
   }
-  Common::CallbackHandle* addPriorityUpdateCb(PriorityUpdateCb callback) const override {
+  Common::CallbackHandlePtr addPriorityUpdateCb(PriorityUpdateCb callback) const override {
     return priority_update_cb_helper_.add(callback);
   }
   const std::vector<std::unique_ptr<HostSet>>& hostSetsPerPriority() const override {

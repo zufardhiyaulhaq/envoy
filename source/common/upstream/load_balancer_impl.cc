@@ -119,15 +119,11 @@ LoadBalancerBase::LoadBalancerBase(
   // Recalculate panic mode for all levels.
   recalculatePerPriorityPanic();
 
-  priority_set_.addPriorityUpdateCb([this](uint32_t priority, const HostVector&,
-                                           const HostVector&) -> void {
-    recalculatePerPriorityState(priority, priority_set_, per_priority_load_, per_priority_health_,
-                                per_priority_degraded_, total_healthy_hosts_);
-  });
-
-  priority_set_.addPriorityUpdateCb(
+  priority_update_cb_ = priority_set_.addPriorityUpdateCb(
       [this](uint32_t priority, const HostVector&, const HostVector&) -> void {
-        UNREFERENCED_PARAMETER(priority);
+        recalculatePerPriorityState(priority, priority_set_, per_priority_load_,
+                                    per_priority_health_, per_priority_degraded_,
+                                    total_healthy_hosts_);
         recalculatePerPriorityPanic();
         stashed_random_.clear();
       });
@@ -386,12 +382,6 @@ ZoneAwareLoadBalancerBase::ZoneAwareLoadBalancerBase(
           // based routing.
           regenerateLocalityRoutingStructures();
         });
-  }
-}
-
-ZoneAwareLoadBalancerBase::~ZoneAwareLoadBalancerBase() {
-  if (local_priority_set_member_update_cb_handle_ != nullptr) {
-    local_priority_set_member_update_cb_handle_->remove();
   }
 }
 
